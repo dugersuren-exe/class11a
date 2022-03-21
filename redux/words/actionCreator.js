@@ -22,7 +22,8 @@ const getAllWords = () => {
   return async dispatch => {
     try {
       dispatch(wordsLoading());
-      await axios.get("http://localhost:3000/api/words").then(({data}) => {          
+      await axios.get("http://localhost:3000/api/words")
+      .then(({data}) => {          
         dispatch(wordsSuccess(data.list))
         
       });
@@ -39,7 +40,8 @@ const addWord = (word) => {
   return async dispatch => {
     try {
       dispatch(wordsLoading());
-      await axios.post("http://localhost:3000/api/words",word ).then(({data}) => { 
+      await axios.post("http://localhost:3000/api/words",word )
+      .then(({data}) => { 
         dispatch(getAllWords());
         // dispatch(wordsSuccess(data))
       });
@@ -51,6 +53,43 @@ const addWord = (word) => {
 };
 
 
+const delWord = (word) => {
+  
+  return async dispatch => {
+    try {
+      //console.log("===========>",word,"<================")
+      dispatch(wordsLoading());
+      await axios.delete("http://localhost:3000/api/words",{data:word} )
+      .then(({data}) => { 
+        dispatch(getAllWords());
+        //dispatch(wordsSuccess(data.list))
+      });
+    } catch (err) {
+      dispatch(wordsError(err));
+    }
 
-export {getAllWords, addWord };
+  };
+};
+
+
+const editWord = (word) => {
+  
+  return async dispatch => {
+    try {
+      console.log("===========>",word,"<================")
+      dispatch(wordsLoading());
+      await axios.put("http://localhost:3000/api/words",{data:word} )
+      .then(({data}) => { 
+        dispatch(getAllWords());
+        //dispatch(wordsSuccess(data.list))
+      });
+    } catch (err) {
+      dispatch(wordsError(err));
+    }
+
+  };
+};
+
+
+export {getAllWords, addWord,editWord , delWord};
 

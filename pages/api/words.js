@@ -29,7 +29,7 @@ async function getPosts(req, res) {
         let words = await db
             .collection('words')
             .find({})
-            .sort({ published: -1 })
+            .sort({mon:1 })
             .toArray();
         return res.json({
             list: JSON.parse(JSON.stringify(words)),
@@ -47,7 +47,7 @@ async function getPosts(req, res) {
 async function addPost(req, res) {
     try {
         let { db } = await connectToDatabase();
-        console.log("hi----->",req.body);
+        //console.log("hi----->",req.body);
         await db.collection('words').insertOne(req.body);
         
         return res.json({
@@ -64,23 +64,24 @@ async function addPost(req, res) {
 
 // Updating a post
 async function updatePost(req, res) {
+    
     try {
         let { db } = await connectToDatabase();
-
-        await db.collection('words').updateOne(
+        //console.log("request->",req.body.data._id);
+        const x=await db.collection('words').updateOne(
             {
-                _id: new ObjectId(req.body),
+                _id: new ObjectId(req.body.data._id),
             },
-            { $set: { published: true } }
+            { $set:{eng:req.body.data.eng, mon:req.body.data.mon, comm:req.body.data.comm} }
         );
-
+           
         return res.json({
-            message: 'Post updated successfully',
+            data: x,
             success: true,
         });
     } catch (error) {
         return res.json({
-            message: new Error(error).meзүssage,
+            message: new Error(error).message,
             success: false,
         });
     }
@@ -89,10 +90,13 @@ async function updatePost(req, res) {
 // deleting a post
 async function deletePost(req, res) {
     try {
+
+
+        console.log("===========>",req.body,"<================")
         let { db } = await connectToDatabase();
 
         await db.collection('words').deleteOne({
-            _id: new ObjectId(req.body),
+            _id: new ObjectId(req.body._id),
         });
 
         return res.json({
