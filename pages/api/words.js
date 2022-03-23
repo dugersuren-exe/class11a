@@ -29,7 +29,7 @@ async function getPosts(req, res) {
         let words = await db
             .collection('words')
             .find({})
-            .sort({mon:1 })
+            .sort({mon:-1 })
             .toArray();
         return res.json({
             list: JSON.parse(JSON.stringify(words)),

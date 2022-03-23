@@ -705,49 +705,173 @@ export default allwords
 ---
 
 <details>
-<summary> ????? </summary>
+<summary> API-ийг нэмж оруулна </summary>
 
-????
+pages/api фолдер дотор 
 
-**Жишээ нь:**
+тухайн фолдер дотор шинэ фордер үүсгээд дотор нь index.js, [id].js -ийг үүсгэж өгнө
+
+**Жишээ нь:** дараах файлуудыг үүсгэнэ. өгөгдлийг өөрчлөх
 ```
-???
-```
-</details>
-
----
-<details>
-<summary> ????? </summary>
-
-????
-
-**Жишээ нь:**
-```
-???
+pages/api/dwords/index.js
+pages/api/dwords/[id].js
 ```
 </details>
 
 ---
 <details>
-<summary> ????? </summary>
+<summary> redux-ийг үүсгэх </summary>
+
+redux фолдер дотор өөрийн үүсгэх redux -ийн нэр бүхийх фолдерийг үүсгэнэ
+
+
+**Жишээ нь:** дараах файлуудыг үүсгэх
+```
+redux/dwords/actions.js
+redux/dwords/reducers.js
+redux/dwords/actionCreater.js
+
+```
+
+**Жишээ нь:** actionCreater.js -ийн кодын хэсгийг хавсаргавал
+```
+import actions from './actions';
+import axios from 'axios'
+import {notification } from 'antd';
+
+const { dwordsLoading, dwordsSuccess, dwordsError } = actions;
+
+const openNotification = () => {
+  notification.open({
+    message: 'Notification Title',
+    description:
+      'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+    className: 'custom-class',
+    style: {
+      width: 600,
+    },
+  });
+};
+
+
+const getAllDWords = () => {
+  
+  return async dispatch => {
+    try {
+      dispatch(dwordsLoading());
+      await axios.get("http://localhost:3000/api/dwords")
+      .then(({data}) => {          
+        dispatch(dwordsSuccess(data.list))
+        
+      });
+    } catch (err) {
+      dispatch(dwordsError(err));
+    }
+
+  };
+};
+
+
+const addDWord = (word) => {
+  
+  return async dispatch => {
+    try {
+      dispatch(dwordsLoading());
+      await axios.post("http://localhost:3000/api/words",word )
+      .then(({data}) => { 
+        dispatch(getAllDWords());
+        // dispatch(wordsSuccess(data))
+      });
+    } catch (err) {
+      dispatch(wordsError(err));
+    }
+
+  };
+};
+
+
+const delDWord = (word) => {
+  
+  return async dispatch => {
+    try {
+      //console.log("===========>",word,"<================")
+      dispatch(dwordsLoading());
+      await axios.delete("http://localhost:3000/api/words",{data:word} )
+      .then(({data}) => { 
+        dispatch(getAllDWords());
+        //dispatch(wordsSuccess(data.list))
+      });
+    } catch (err) {
+      dispatch(wordsError(err));
+    }
+
+  };
+};
+
+
+const editDWord = (word) => {
+  
+  return async dispatch => {
+    try {
+      console.log("===========>",word,"<================")
+      dispatch(wordsLoading());
+      await axios.put("http://localhost:3000/api/words",{data:word} )
+      .then(({data}) => { 
+        dispatch(getAllDWords());
+        //dispatch(wordsSuccess(data.list))
+      });
+    } catch (err) {
+      dispatch(dwordsError(err));
+    }
+
+  };
+};
+
+
+export {getAllDWords, addDWord,editDWord , delDWord};
+
+
+
+```
+
+
+
+</details>
+
+---
+<details>
+<summary> Үүсгэсэн redux-ийг rootReducer-тэй холбох </summary>
 
 ????
 
 **Жишээ нь:**
 ```
-???
+import  WordsReducer  from "./words/reducers";
+import  PupilReducer  from "./pupil/reducers";
+import DWordsReducer from "./dwords/reducers";  //Энэ хэсэгт import оор оруулж ирэх
+
+export default combineReducers({
+  words: WordsReducer,
+  Ugs:DWordsReducer, // Энэ хэсэг нэгтгэх үйлдлийг хийж өгөх
+  pupil:PupilReducer,
+});
+
 ```
 </details>
 
 ---
 <details>
-<summary> ????? </summary>
+<summary> redux-ийг дуудаж ажиллуулахдаа </summary>
 
 ????
 
 **Жишээ нь:**
 ```
-???
+import { getAllDWords } from "../redux/dwords/actionCreator";
+...................
+...................
+<Button onClick={()=>{dispatch(getAllDWords());}}>Ugs</Button>
+
 ```
 </details>
 

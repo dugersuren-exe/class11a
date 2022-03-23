@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllWords , addWord, delWord,editWord} from "../redux/words/actionCreator";
+import { getAllDWords , addDWord, delDWord,editDWord} from "../redux/dwords/actionCreator";
 import actions from "../redux/words/actions";
 
 import { Form, Input,Table, Tag, Space,Button, Modal } from 'antd';
@@ -112,6 +113,7 @@ setWord(w)
     {JSON.stringify(word)}
     </Space>
     <Space>
+    <Button onClick={()=>{dispatch(getAllDWords());}}>Ugs</Button>
     <Button onClick={()=>{setIsEdit(false); onFillShow({eng:'',mon:'',comm:''})}}>Үг нэмэх</Button>
     </Space>
     <Table columns={columns} dataSource={data} />
@@ -212,7 +214,7 @@ setWord(w)
           },
         ]}
       >
-        <label />
+        <Input />
       </Form.Item>
       <Form.Item
         name="mon"
@@ -223,7 +225,7 @@ setWord(w)
           },
         ]}
       >
-      <label />
+      <Input />
       </Form.Item>
       <Form.Item
         name="comm"
